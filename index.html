@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Мерекемізбен, жаным ✦</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💌</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Bad+Script&family=Caveat:wght@600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;overflow:hidden;background:#03040c;user-select:none;-webkit-user-select:none;}
+  body{font-family:Montserrat,'Segoe UI',Arial,sans-serif;}
+
+  #sky{position:fixed;inset:0;z-index:1;display:block;}
+  .nebula{position:fixed;z-index:0;border-radius:50%;filter:blur(80px);pointer-events:none;mix-blend-mode:screen;}
+  .n1{width:64vmax;height:64vmax;left:-18vmax;top:-22vmax;background:radial-gradient(circle,rgba(88,70,190,.30),transparent 65%);animation:drift1 40s ease-in-out infinite alternate;}
+  .n2{width:54vmax;height:54vmax;right:-14vmax;bottom:-20vmax;background:radial-gradient(circle,rgba(190,64,138,.24),transparent 65%);animation:drift2 52s ease-in-out infinite alternate;}
+  @keyframes drift1{to{transform:translate(7vmax,5vmax) scale(1.1);}}
+  @keyframes drift2{to{transform:translate(-6vmax,-7vmax) scale(1.08);}}
+  .vignette{position:fixed;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,rgba(2,3,10,.6) 100%);}
+
+  #flash{position:fixed;z-index:3;left:50%;top:42%;width:64vmax;height:64vmax;border-radius:50%;
+    transform:translate(-50%,-50%) scale(.3);pointer-events:none;opacity:0;
+    background:radial-gradient(circle,rgba(255,222,242,.55),transparent 60%);}
+  #flash.go{animation:flashA .9s ease-out;}
+  @keyframes flashA{0%{opacity:0;transform:translate(-50%,-50%) scale(.3);}25%{opacity:.75;}100%{opacity:0;transform:translate(-50%,-50%) scale(1.2);}}
+
+  #envGlow,#heartGlow{position:fixed;z-index:3;pointer-events:none;border-radius:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity 1.6s ease;}
+  #envGlow{background:radial-gradient(circle,rgba(150,140,255,.17),transparent 65%);}
+  #envGlow.vis{opacity:1;}
+  #heartGlow{background:radial-gradient(circle,rgba(255,80,140,.22) 0%,rgba(255,80,140,.08) 40%,transparent 70%);transition:opacity 2s ease;}
+  #heartGlow.vis{opacity:1;}
+
+  /* ---- круглая кнопка (hold) ---- */
+  #hint{position:fixed;z-index:5;left:50%;bottom:calc(max(6vh,26px) + 132px);transform:translateX(-50%);
+    color:rgba(214,224,255,.78);font-size:13px;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;
+    animation:hintFloat 3s ease-in-out infinite;transition:opacity .4s;}
+  @keyframes hintFloat{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-5px);}}
+  #hint.gone{opacity:0 !important;animation:none;}
+
+  #holdBtn{position:fixed;z-index:5;left:50%;bottom:max(6vh,26px);transform:translateX(-50%);
+    width:106px;height:106px;border-radius:50%;cursor:pointer;outline:none;touch-action:none;
+    background:radial-gradient(circle at 34% 30%,rgba(140,165,255,.18),rgba(8,11,26,.72) 62%);
+    border:1px solid rgba(190,205,255,.4);
+    box-shadow:0 0 34px rgba(130,160,255,.28), inset 0 0 20px rgba(130,160,255,.14);
+    transition:opacity .8s ease,transform .25s ease;animation:btnPulse 3s ease-in-out infinite;}
+  #holdBtn:active{transform:translateX(-50%) scale(.95);}
+  #holdBtn.gone{opacity:0;pointer-events:none;animation:none;}
+  @keyframes btnPulse{
+    0%,100%{box-shadow:0 0 26px rgba(130,160,255,.22), inset 0 0 18px rgba(130,160,255,.12);}
+    50%{box-shadow:0 0 48px rgba(150,175,255,.42), inset 0 0 26px rgba(150,175,255,.2);}}
+  #holdBtn svg{position:absolute;inset:0;width:100%;height:100%;}
+  #holdBtn .ringbg{fill:none;stroke:rgba(255,255,255,.14);stroke-width:3;}
+  #ring{fill:none;stroke:#ffd9ec;stroke-width:3;stroke-linecap:round;
+    transform:rotate(-90deg);transform-origin:50% 50%;filter:drop-shadow(0 0 4px rgba(255,180,220,.85));}
+  .btn-star{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:30px;color:#e6ecff;text-shadow:0 0 14px rgba(160,190,255,.9);pointer-events:none;}
+
+  /* ---- pill кнопки ---- */
+  .pill{position:fixed;z-index:6;left:50%;transform:translateX(-50%) translateY(8px);border-radius:999px;cursor:pointer;
+    font-family:Montserrat,'Segoe UI',Arial,sans-serif;letter-spacing:.12em;
+    transition:opacity .9s ease,transform .9s ease,box-shadow .3s,background .3s;}
+  #openBtn{top:0;padding:14px 40px;font-size:15px;font-weight:500;color:#ffe6f1;
+    border:1px solid rgba(255,185,215,.55);
+    background:linear-gradient(135deg,rgba(255,120,170,.16),rgba(150,120,255,.2));
+    box-shadow:0 0 26px rgba(255,140,190,.3);opacity:0;pointer-events:none;}
+  #openBtn.vis{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0);}
+  #openBtn:hover{box-shadow:0 0 42px rgba(255,150,200,.5);
+    background:linear-gradient(135deg,rgba(255,120,170,.28),rgba(150,120,255,.3));}
+  #panelBtnWrap{text-align:center;margin-top:22px;}
+  #panelBtn{padding:13px 48px;border-radius:999px;border:none;cursor:pointer;
+    font:600 15px Montserrat,'Segoe UI',sans-serif;letter-spacing:.06em;color:#fff;
+    background:linear-gradient(90deg,#ff5f8f,#ff9a5e);
+    box-shadow:0 0 26px rgba(255,105,140,.55),0 0 60px rgba(255,90,120,.25);
+    opacity:0;pointer-events:none;transition:opacity .8s ease,box-shadow .3s,transform .25s;}
+  #panelBtn.vis{opacity:1;pointer-events:auto;}
+  #panelBtn:hover{box-shadow:0 0 40px rgba(255,120,150,.8),0 0 80px rgba(255,90,120,.35);transform:scale(1.05);}
+
+  /* ---- хат панелі ---- */
+  #letterPanel{position:fixed;z-index:7;left:50%;top:50%;transform:translate(-50%,-44%) scale(.7);
+    width:min(720px,94vw);max-height:88vh;overflow-y:auto;padding:36px 40px 30px;border-radius:26px;
+    background:linear-gradient(165deg,rgba(24,22,36,.94),rgba(16,15,28,.96));
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border:1.5px solid rgba(255,105,150,.7);
+    box-shadow:0 0 34px rgba(255,90,140,.42),0 0 90px rgba(255,60,120,.22),inset 0 0 60px rgba(255,120,160,.05);
+    opacity:0;pointer-events:none;filter:blur(8px);
+    transition:opacity .9s ease,transform 1.15s cubic-bezier(.2,1.15,.35,1),filter 1.1s ease;
+    scrollbar-width:thin;scrollbar-color:rgba(255,160,190,.35) transparent;}
+  #letterPanel.vis{opacity:1;pointer-events:auto;filter:blur(0);transform:translate(-50%,-50%) scale(1);}
+  #letterPanel::-webkit-scrollbar{width:6px;}
+  #letterPanel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:3px;}
+  .panel-deco{text-align:center;color:rgba(255,200,230,.85);letter-spacing:1.1em;font-size:11px;margin-bottom:18px;padding-left:1.1em;}
+  #letterText{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;
+    font-size:clamp(17.5px,2.3vw,20px);line-height:1.7;color:#e8d8b5;user-select:text;-webkit-user-select:text;}
+  .chunk{display:block;margin:0 0 0.9em;opacity:0;transition:opacity 1.4s ease;}
+  .chunk:last-child{margin-bottom:0;}
+  .chunk.on{opacity:1;}
+  .chunk.sign{font-size:clamp(22px,3vw,32px);font-weight:600;margin-top:1em;
+    color:#e8d8b5;text-shadow:0 0 18px rgba(232,216,181,.35);}
+
+  /* ---- финал ---- */
+  #finalText{position:fixed;z-index:6;left:50%;top:76%;width:92vw;transform:translateX(-50%) translateY(12px);
+    font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;text-align:center;
+    font-size:clamp(26px,4.8vw,46px);color:#ffeaf4;letter-spacing:.03em;
+    text-shadow:0 0 22px rgba(255,110,165,.65),0 0 70px rgba(255,80,140,.35);
+    opacity:0;pointer-events:none;transition:opacity 2.2s ease,transform 2.2s ease;}
+  #finalText.vis{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  #replayBtn{position:fixed;z-index:6;right:18px;bottom:16px;padding:7px 14px;border-radius:999px;
+    font:400 11.5px Montserrat,sans-serif;letter-spacing:.08em;color:rgba(220,228,255,.5);
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.14);cursor:pointer;
+    opacity:0;pointer-events:none;transition:opacity .8s,color .3s;}
+  #replayBtn.vis{opacity:1;pointer-events:auto;}
+  #replayBtn:hover{color:rgba(255,255,255,.9);}
+
+  /* ---- телефон ---- */
+  @media (max-width:640px){
+    #holdBtn{width:92px;height:92px;}
+    #hint{bottom:calc(max(6vh,26px) + 118px);font-size:11px;letter-spacing:.14em;}
+    #openBtn{padding:12px 34px;font-size:14px;}
+    #letterPanel{padding:28px 22px 24px;border-radius:20px;}
+    #letterText{font-size:17px;line-height:1.65;}
+    #panelBtn{padding:12px 40px;}
+    #finalText{font-size:clamp(22px,6.4vw,32px);top:70%;}
+  }
+</style>
+</head>
+<body>
+<div class="nebula n1"></div>
+<div class="nebula n2"></div>
+<canvas id="sky"></canvas>
+<div class="vignette"></div>
+<div id="flash"></div>
+<div id="envGlow"></div>
+<div id="heartGlow"></div>
+
+<div id="hint">Батырманы басып тұрыңыз · 3 секунд</div>
+<button id="holdBtn" aria-label="Басып тұрыңыз — жұлдыздар хат құрайды">
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <circle class="ringbg" cx="50" cy="50" r="46"></circle>
+    <circle id="ring" cx="50" cy="50" r="46"></circle>
+  </svg>
+  <span class="btn-star">✦</span>
+</button>
+
+<button id="openBtn" class="pill">Хатты ашу</button>
+
+<div id="letterPanel">
+  <div class="panel-deco">✦ ✦ ✦</div>
+  <div id="letterText"></div>
+  <div id="panelBtnWrap"><button id="panelBtn">Жалғасы</button></div>
+</div>
+
+<div id="finalText">Мен сені қатты жақсы көремін ❤️</div>
+<button id="replayBtn">↺ қайта көру</button>
+<noscript><p style="color:#fff;position:fixed;top:20px;left:20px;z-index:9">Бұл сайт JavaScript қажет.</p></noscript>
+
+<script>
+(() => {
+'use strict';
+/* ================= helpers ================= */
+const TAU = Math.PI * 2;
+const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
+const lerp  = (a,b,t) => a + (b-a)*t;
+const rand  = (a,b) => a + Math.random()*(b-a);
+const easeIO = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+const $ = id => document.getElementById(id);
+
+const canvas = $('sky'), ctx = canvas.getContext('2d');
+const holdBtn=$('holdBtn'), ringEl=$('ring'), hintEl=$('hint'),
+      openBtn=$('openBtn'), panel=$('letterPanel'), panelBtn=$('panelBtn'),
+      finalText=$('finalText'), heartGlow=$('heartGlow'), envGlow=$('envGlow'),
+      flashEl=$('flash'), replayBtn=$('replayBtn');
+
+const RING_C = TAU*46;
+ringEl.style.strokeDasharray = RING_C;
+ringEl.style.strokeDashoffset = RING_C;
+
+/* ================= letter text ================= */
+const CHUNKS = [
+'Жаным, бүгін біздің танысқанымызға тура 2 ай болды. Осы екі ай көзді ашып-жұмғандай тез өте шықты, бірақ дәл осы уақыт ішінде сен менің өмірімнің ең маңызды бөлшегіне айналып үлгердің.',
+'Сені алғаш көріп, бір-ақ минут сөйлескеннен кейін көз ала алмай қалған сол бір сәт әлі күнге дейін есімде. Сол кездегі мөлдір көзің, сөйлеген сөзің мен әрбір қимылың мені қалай баурап алса, қазір де жаныңда жүргенде сұлулығыңа тамсанып, кейде тіпті тілім бұратылып қалады. Өзің менен кейде «Неге мен?» деп сұрайсың ғой... Осы 2 айдың ішінде мен бұл сұрақтың жауабын одан сайын терең түсіндім. Өйткені сен ешкімге ұқсамайтын ерекше жансың. Сенің бойыңнан есетін жылылық тіпті қасымда жоқ кезде де ойыма түссе, жүзіме бірден күлкі ұялатады.',
+'Сенімен өткізген осы екі айдың әрбір сәті мен үшін өте қымбат. Жанымда дәл сенің болғаныңа жүрегіммен қуанамын. Біздің алдағы күндеріміз бұдан да керемет, бұдан да бақытты сәттерге толы болатынына сенемін. Мен сені жақсы көргендей басқа ешкімді дәл олай жақсы көрген емеспін.'
+];
+const letterText = $('letterText');
+letterText.innerHTML = CHUNKS.map(c => `<p class="chunk">${c}</p>`).join('');
+const chunkEls = Array.from(letterText.children);
+
+/* ================= star sprites ================= */
+function makeSprite(core, halo){
+  const s = 64, c = document.createElement('canvas');
+  c.width = c.height = s;
+  const g = c.getContext('2d'), r = s/2;
+  const gr = g.createRadialGradient(r,r,0,r,r,r);
+  gr.addColorStop(0, core);
+  gr.addColorStop(0.16, core);
+  gr.addColorStop(0.34, halo);
+  gr.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = gr; g.fillRect(0,0,s,s);
+  return c;
+}
+const SP = [ makeSprite('#ffffff','#bcd2ff'),
+             makeSprite('#fff6e6','#ffd9a8'),
+             makeSprite('#fff0f6','#ffb0d4'),
+             makeSprite('#fff7e2','#e6c07c') ]; // 3 — беж
+function makeGlowSprite(){
+  const s = 128, c = document.createElement('canvas');
+  c.width = c.height = s;
+  const g = c.getContext('2d'), r = s/2;
+  const gr = g.createRadialGradient(r,r,0,r,r,r);
+  gr.addColorStop(0,'rgba(255,242,250,0.95)');
+  gr.addColorStop(0.25,'rgba(255,120,180,0.5)');
+  gr.addColorStop(0.6,'rgba(255,60,140,0.18)');
+  gr.addColorStop(1,'rgba(0,0,0,0)');
+  g.fillStyle = gr; g.fillRect(0,0,s,s);
+  return c;
+}
+const GLOW_SP = makeGlowSprite();
+
+/* ================= state ================= */
+let W = 0, H = 0, DPR = 1;
+let phase = 'idle';      // idle | formed | opening | letter | rain | heart
+let phaseT = 0;
+let holdP = 0, holding = false, holdStart = 0, locked = false;
+const HOLD_MS = 3000, RAIN_D = 10;
+let stars = [], floatStars = [], floatHearts = [], allStars = [], cols = [];
+let envG = {W:0,H:0,cx:0,cy:0};
+let heart = null;
+let rainWords = [], rainFont = 16, rowH = 20;
+const RAIN_WORDS = ['Жаным','Күнім','Ботам','Айым','Сүйіктім','Сұлуым','Алтыным','Балапаным','Жүрегім','Ботақаным','Қымбаттым'];
+// сөздер әр түрлі қызғылт тонда (референс фотодағыдай)
+const RAIN_MAIN = ['#fff5fa','#ffd9ea','#ffb9d6','#ff92c2','#ff7ab5'];
+// өрлеп жанып тұру: ақ-қызғылт басы → neon қызғылт → бұғырақ аяғы
+const RAIN_COLORS = ['#fff8fb','#ffe6f1','#ffd0e4','#ffb0d3','#ff93c5','#f574ae','#d95895','#a84477','#73345a','#4c2840','#321f2e','#221826','#171320','#100e18'];
+let autoT = null, meteors = [], meteorAcc = 0, last = 0;
+
+function clearAuto(){ if(autoT){ clearTimeout(autoT); autoT = null; } }
+function doFlash(){ flashEl.classList.remove('go'); void flashEl.offsetWidth; flashEl.classList.add('go'); }
+
+/* ================= stars ================= */
+function newStar(){
+  const s = {
+    hx:rand(0,W), hy:rand(0,H), x:0, y:0,
+    fx:0, fy:0, tx:0, ty:0, px:0, py:0,
+    p:1, dur:1, swirl:0, a:1, ta:1,
+    delay:rand(0,0.38), sw:Math.random()<0.5?-1:1,
+    size:rand(1.3,3.0), col:3, // конверт жұлдыздары — беж
+    tw:{sp:rand(0.5,2.2), ph:rand(0,TAU), base:rand(0.55,0.9), amp:rand(0.2,0.5)},
+    flap:false, seal:false
+  };
+  s.x = s.hx; s.y = s.hy; s.tx = s.x; s.ty = s.y;
+  return s;
+}
+function heartLocal(n){
+  const raw = [];
+  for(let i=0;i<n*8;i++){
+    const th = i/(n*8)*TAU;
+    raw.push([ 16*Math.pow(Math.sin(th),3),
+               13*Math.cos(th)-5*Math.cos(2*th)-2*Math.cos(3*th)-Math.cos(4*th) ]);
+  }
+  let minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9;
+  for(const p of raw){ minx=Math.min(minx,p[0]);maxx=Math.max(maxx,p[0]);miny=Math.min(miny,p[1]);maxy=Math.max(maxy,p[1]); }
+  const s = 16/Math.max(maxx-minx, maxy-miny);
+  const mcx=(minx+maxx)/2, mcy=(miny+maxy)/2;
+  const pts = [];
+  for(let i=0;i<n;i++){ const p = raw[i*8]; pts.push([ (p[0]-mcx)*s, (p[1]-mcy)*s ]); }
+  return pts;
+}
+function makeStars(){
+  stars = []; floatStars = []; floatHearts = [];
+  const area = W*H;
+  const HF = area > 1200000 ? 200 : area > 500000 ? 130 : 60;  // жүрекшелер саны
+  const HS = 14, hpts = heartLocal(14);
+  const total = Math.max(HF*HS + 1000, clamp(Math.round(area/300), 1200, 7000));
+  for(let i=0;i<total-HF*HS;i++) stars.push(newStar());
+  // мөр жүрегінің жұлдыздары (соңғы sealN-і) — роз
+  {
+    const n = stars.length;
+    const sealN = Math.min(24, n - Math.round(n*0.42));
+    for(let i=n-sealN;i<n;i++) stars[i].col = 2;
+  }
+  for(let h=0;h<HF;h++){
+    const heart = { nax:0.5, nay:0.5,
+                    a1:rand(0.25,0.6), a2:rand(0.22,0.55),
+                    A:rand(24,70), B:rand(18,52),
+                    ph1:rand(0,TAU), ph2:rand(0,TAU), ph3:rand(0,TAU), ph4:rand(0,TAU),
+                    scale:rand(2.6,3.8), fadeIn:300+h*7 };
+    for(let k=0;k<HS;k++){
+      const p = hpts[k % hpts.length];
+      floatStars.push({
+        heart, x:rand(0,W), y:rand(0,H), lx:p[0], ly:p[1],
+        a:0, ta:0, size:rand(1.4,2.3), col:2,   // жүрекшелер — роз
+        tw:{sp:rand(0.9,2.6), ph:rand(0,TAU), base:0.65, amp:0.35},
+        fx:0, fy:0, tx:0, ty:0, px:0, py:0, p:1, dur:1, swirl:0
+      });
+    }
+    floatHearts.push(heart);
+  }
+  allStars = stars.concat(floatStars);
+  cols = [[],[],[],[]];
+  for(const st of allStars) cols[st.col].push(st);
+}
+
+/* жүрекшелерді хаттың қасындағы ауаға (кольцо) орналастыру */
+function repositionFloatHearts(){
+  const R = Math.max(envG.W, envG.H)/2;
+  for(const fh of floatHearts){
+    const a = rand(0, TAU);
+    const rr = R * rand(1.12, 2.1);
+    fh.nax = clamp((envG.cx + Math.cos(a)*rr*1.18)/W, 0.04, 0.96);
+    fh.nay = clamp((envG.cy + Math.sin(a)*rr*0.82)/H, 0.05, 0.95);
+  }
+}
+
+/* ================= envelope targets ================= */
+function envelopeTargets(){
+  const Wenv = clamp(Math.min(W*0.86, 470), 190, 470);
+  const Henv = Wenv*0.68;
+  const g = { W:Wenv, H:Henv, cx:W/2, cy:Math.min(H*0.42, H-230) };
+  envG = g;
+  const segs = [];
+  const w = Wenv/2, h = Henv/2;
+  const add = (x1,y1,x2,y2,flap) => {
+    const len = Math.hypot(x2-x1,y2-y1);
+    segs.push({x1,y1,x2,y2,len,flap,px:-(y2-y1)/len,py:(x2-x1)/len});
+  };
+  add(-w,-h,  w,-h, false); add( w,-h,  w, h, false);
+  add( w, h, -w, h, false); add(-w, h, -w,-h, false);
+  add(-w,-h, 0, 0, true);   add( w,-h, 0, 0, true);   // конверт қапағы (V)
+  const totalLen = segs.reduce((s,x)=>s+x.len,0);
+  const n = stars.length;
+  const nOutline = Math.round(n*0.42);
+
+  // контур — жарқыраған сыртқы шекара
+  let idx = 0;
+  const putSeg = (st, s, u) => {
+    const band = (Math.random()-0.5)*7; // қалың контур
+    st.flap = !!s.flap; st.seal = false; st.fill = false;
+    st.tx = g.cx + lerp(s.x1,s.x2,u) + s.px*band + rand(-1.4,1.4);
+    st.ty = g.cy + lerp(s.y1,s.y2,u) + s.py*band + rand(-1.4,1.4);
+    st.ta = 1;
+  };
+  for(const s of segs){
+    const count = Math.max(3, Math.round(nOutline*s.len/totalLen));
+    for(let k=0;k<count && idx<nOutline;k++){
+      putSeg(stars[idx++], s, count>1 ? k/(count-1) : 0.5);
+    }
+  }
+  while(idx<nOutline){
+    putSeg(stars[idx++], segs[(Math.random()*segs.length)|0], Math.random());
+  }
+
+  // ішкі толу — тығыз жұлдыздар өрісі (сәл бұғырақ)
+  for(let i=nOutline;i<n;i++){
+    const st = stars[i];
+    st.flap = false; st.seal = false; st.fill = true;
+    st.tx = g.cx + rand(-Wenv/2, Wenv/2);
+    st.ty = g.cy + rand(-Henv/2, Henv/2);
+    st.ta = rand(0.42, 0.72);
+    st.tw.amp = Math.min(st.tw.amp, 0.22);
+  }
+
+  // қапак ұшындағы кішкентай жұлдыз жүрегі (мөрі)
+  const sealN = Math.min(24, n-nOutline);
+  const hp = heartLocal(20);
+  for(let k=0;k<sealN;k++){
+    const st = stars[n-sealN+k], p = hp[k % hp.length];
+    st.flap = false; st.seal = true; st.fill = false;
+    st.tx = g.cx + p[0]*1.35; st.ty = g.cy - p[1]*1.35;
+    st.ta = 1;
+  }
+  return g;
+}
+
+/* ================= heart targets ================= */
+function heartTargets(){
+  const scale = Math.min(W,H)*0.5/32;
+  const N = 1400, raw = [];
+  for(let i=0;i<N;i++){
+    const th = i/N*TAU;
+    raw.push([ 16*Math.pow(Math.sin(th),3),
+               13*Math.cos(th)-5*Math.cos(2*th)-2*Math.cos(3*th)-Math.cos(4*th) ]);
+  }
+  let minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9;
+  for(const p of raw){ minx=Math.min(minx,p[0]);maxx=Math.max(maxx,p[0]);miny=Math.min(miny,p[1]);maxy=Math.max(maxy,p[1]); }
+  const mcx=(minx+maxx)/2, mcy=(miny+maxy)/2;
+  const cx = W/2, cy = H*0.42;
+  heart = {cx, cy};
+  // біркелкі толу: жүрек пішінін кішкентай битматка салып, аймақтан кездейсоқ нүкте аламыз
+  const bs = 160;
+  const bc = document.createElement('canvas'); bc.width = bc.height = bs;
+  const bg = bc.getContext('2d');
+  bg.beginPath();
+  for(let i=0;i<=N;i++){
+    const p = raw[i % N];
+    const px = (p[0]-minx)/(maxx-minx)*bs;
+    const py = (maxy-p[1])/(maxy-miny)*bs;
+    i===0 ? bg.moveTo(px,py) : bg.lineTo(px,py);
+  }
+  bg.closePath(); bg.fillStyle = '#fff'; bg.fill();
+  const bdata = bg.getImageData(0,0,bs,bs).data;
+  const randFill = () => {
+    for(let k=0;k<40;k++){
+      const bx = (Math.random()*bs)|0, by = (Math.random()*bs)|0;
+      if(bdata[(by*bs+bx)*4+3] > 128){
+        const p0 = minx + bx/bs*(maxx-minx);
+        const p1 = maxy - by/bs*(maxy-miny);
+        return [p0, p1];
+      }
+    }
+    const p = raw[(Math.random()*N)|0];
+    const r = Math.sqrt(Math.random())*0.9;
+    return [mcx + (p[0]-mcx)*r, mcy + (p[1]-mcy)*r];
+  };
+  const n = allStars.length;
+  const nFill = Math.round(n*0.80); // 80% — жүрек іші толық тығыз, екінші жүрек жоқ
+  for(let i=0;i<n;i++){
+    const st = allStars[i];
+    if(i < nFill){
+      // жүрек іші — біркелкі, тығыз толу (тығыз сызықсыз)
+      const fp = randFill();
+      st.hx2 = cx + (fp[0]-mcx)*scale + rand(-1,1);
+      st.hy2 = cy - (fp[1]-mcy)*scale + rand(-1,1);
+      st.inner = false; st.hfill = true; st.ha = rand(0.65, 1);
+    } else {
+      // сыртқы контур — бір ғана анық шекара
+      const p = raw[i % N];
+      st.hx2 = cx + (p[0]-mcx)*scale + rand(-2,2);
+      st.hy2 = cy - (p[1]-mcy)*scale + rand(-2,2);
+      st.inner = false; st.hfill = false; st.ha = 1;
+    }
+  }
+}
+let heartLayers = null;
+function buildHeartLayers(){
+  if(!heart) return;
+  const cw = Math.ceil(Math.min(W,H)*0.55) + 60;
+  const ch = Math.ceil(Math.min(W,H)*0.55) + 60;
+  heartLayers = [];
+  const spr = SP[2];
+  for(let L=0; L<3; L++){
+    const c = document.createElement('canvas'); c.width = cw; c.height = ch;
+    const g = c.getContext('2d');
+    g.globalCompositeOperation = 'lighter';
+    let i = 0;
+    for(const st of allStars){
+      if(!st.hfill) continue;
+      if((i++) % 3 !== L) continue;
+      const x = st.hx2 - heart.cx + cw/2;
+      const y = st.hy2 - heart.cy + ch/2;
+      const sz = st.size*2.4*1.18;
+      g.globalAlpha = st.ha;
+      g.drawImage(spr, x-sz, y-sz, sz*2, sz*2);
+    }
+    heartLayers.push(c);
+  }
+}
+function heartScale(t){
+  if(!heart) return 1;
+  const ramp = clamp((phaseT-2.3)/1.2, 0, 1);
+  const per = 1.9, ph = (t % per)/per;
+  let b = 0;
+  if(ph < 0.14) b = Math.sin(ph/0.14*Math.PI);
+  else if(ph < 0.42) b = Math.sin((ph-0.14)/0.28*Math.PI)*0.55;
+  return 1 + 0.055*b*ramp;
+}
+
+/* ================= transitions ================= */
+function setTrans(st, tx, ty, ta, dur, delay, swirl){
+  st.fx = st.x; st.fy = st.y; st.tx = tx; st.ty = ty;
+  st.dur = dur; st.p = -delay/dur; st.ta = ta; st.swirl = swirl || 0;
+  const dx = tx-st.fx, dy = ty-st.fy, l = Math.hypot(dx,dy)||1;
+  st.px = -dy/l; st.py = dx/l;
+}
+
+/* ================= phases ================= */
+function lockForm(){
+  holding = false;
+  phase = 'formed'; phaseT = 0;
+  holdBtn.classList.add('gone');
+  hintEl.classList.add('gone'); hintEl.style.opacity = '0';
+  doFlash();
+  for(const st of stars){ st.x = st.tx; st.y = st.ty; st.a = st.ta; }
+  repositionFloatHearts();
+  positionGlow();
+  setTimeout(()=>{ if(phase === 'formed') envGlow.classList.add('vis'); }, 250);
+  setTimeout(()=>{ if(phase === 'formed') openBtn.classList.add('vis'); }, 850);
+}
+function positionGlow(){
+  const d = Math.max(envG.W, envG.H)*1.9;
+  envGlow.style.width = d+'px'; envGlow.style.height = d+'px';
+  envGlow.style.left = envG.cx+'px'; envGlow.style.top = envG.cy+'px';
+  openBtn.style.top = (envG.cy + envG.H/2 + 44)+'px';
+}
+function startOpening(fast){
+  if(phase !== 'formed') return;
+  clearAuto();
+  phase = 'opening'; phaseT = 0;
+  openBtn.classList.remove('vis');
+  envGlow.classList.remove('vis');
+  const topY = envG.cy - envG.H/2;
+  for(const st of stars){
+    if(st.flap){
+      // қапақ жоғары ашылады
+      setTrans(st, envG.cx+(st.tx-envG.cx)*1.22, 2*topY-st.ty-64, 0, fast?0.6:1.05, rand(0,0.22), 26);
+    } else if(st.seal){
+      setTrans(st, st.x+rand(-50,50), st.y+rand(-60,16), 0, fast?0.5:0.9, rand(0,0.18), 30);
+    } else {
+      // корпус + ішкі жұлдыздар — сыртқа қарай ұшып ериді
+      const ang = Math.atan2(st.y-envG.cy, st.x-envG.cx);
+      const dist = rand(70, 210);
+      setTrans(st, st.x+Math.cos(ang)*dist, st.y+Math.sin(ang)*dist*0.75, 0, fast?0.8:1.6, rand(0,0.6), 46);
+    }
+  }
+  for(const fs of floatStars) setTrans(fs, fs.x, fs.y, 0, fast?0.5:0.9, 0, 0);
+  setTimeout(()=>{ if(phase!=='opening') return; panel.classList.add('vis'); }, fast?0:550);
+  setTimeout(doFlash, fast?0:650);
+  chunkEls.forEach((el,i)=>{
+    setTimeout(()=>{ if(phase==='opening'||phase==='letter') el.classList.add('on'); }, fast?250:1300+i*1500);
+  });
+  setTimeout(()=>{ if(phase==='opening'){ phase='letter'; phaseT=0; } }, fast?500:1600);
+  setTimeout(()=>{ if(phase==='letter') panelBtn.classList.add('vis'); }, fast?2000:7000);
+  if(!fast) autoT = setTimeout(()=>{ if(phase==='letter') startRain(); }, 60000);
+}
+function initRain(){
+  rainFont = clamp(Math.round(H*0.02), 15, 24);
+  rowH = rainFont*1.32;
+  const n = clamp(Math.round(W*H/34000), 40, 90); // экранға сәйкес сөз саны
+  rainWords = [];
+  for(let i=0;i<n;i++) rainWords.push(newRainWord(true));
+}
+function newRainWord(prefill){
+  return {
+    x: rand(16, W-140),
+    y: prefill ? rand(-H*0.35, H) : -rand(30, H*0.35), // төбеден түседі
+    v: rand(75, 195),
+    size: rand(0.7, 1.65),
+    word: RAIN_WORDS[(Math.random()*RAIN_WORDS.length)|0],
+    col: RAIN_MAIN[(Math.random()*RAIN_MAIN.length)|0],
+    sw: rand(6,26), swW: rand(0.3,0.9), swPh: rand(0,TAU) // жай ғана тербелу
+  };
+}
+function startRain(){
+  clearAuto();
+  panel.classList.remove('vis');
+  phase = 'rain'; phaseT = 0;
+  initRain();
+}
+function startHeart(){
+  if(phase === 'heart') return;
+  clearAuto();
+  panel.classList.remove('vis');
+  phase = 'heart'; phaseT = 0;
+  heartTargets();
+  buildHeartLayers();
+  // жұлдыздар хаттан емес — екінші жақтан (сол/оң шеттерден) жиналады
+  for(const st of allStars){
+    const fromLeft = st.hx2 < heart.cx;
+    st.x = fromLeft ? -rand(10, 70) : W + rand(10, 70);
+    st.y = clamp(st.hy2 + rand(-H*0.18, H*0.18), -20, H+20);
+    setTrans(st, st.hx2, st.hy2, st.ha || 1, 2.3, rand(0,0.8), 60);
+  }
+  const d = Math.min(W,H)*0.95;
+  heartGlow.style.width = d+'px'; heartGlow.style.height = d+'px';
+  heartGlow.style.left = heart.cx+'px'; heartGlow.style.top = heart.cy+'px';
+  setTimeout(()=>{ heartGlow.classList.add('vis'); doFlash(); }, 1500);
+  setTimeout(()=>finalText.classList.add('vis'), 2700);
+  setTimeout(()=>replayBtn.classList.add('vis'), 4300);
+}
+
+/* ================= update ================= */
+function update(dt, t){
+  if(phase === 'idle'){
+    if(holding){
+      holdP = Math.min(1, (performance.now()-holdStart)/HOLD_MS);
+    } else if(holdP > 0){
+      holdP = Math.max(0, holdP - dt/0.7);
+    }
+    hintEl.style.opacity = String(clamp(1-holdP*1.6, 0, 1));
+    ringEl.style.strokeDashoffset = String(RING_C*(1-holdP));
+    for(const st of stars){
+      const local = clamp(holdP*1.4 - st.delay, 0, 1);
+      if(local === 0){ st.x = st.hx; st.y = st.hy; continue; }
+      const e = easeIO(local);
+      const dx = st.tx-st.hx, dy = st.ty-st.hy;
+      const len = Math.hypot(dx,dy)||1;
+      const wob = (local<1) ? Math.sin(local*Math.PI)*Math.min(46, len*0.35)*st.sw : 0;
+      st.x = st.hx + dx*e + (-dy/len)*wob;
+      st.y = st.hy + dy*e + ( dx/len)*wob;
+    }
+    if(holdP >= 1 && !locked){ locked = true; lockForm(); }
+    return;
+  }
+  ringEl.style.strokeDashoffset = '0';
+
+  if(phase === 'formed'){
+    for(const st of stars){
+      st.x = st.tx + Math.sin(t*0.6 + st.tw.ph)*1.3;
+      st.y = st.ty + Math.cos(t*0.53 + st.tw.ph)*1.3;
+      st.a += (st.ta-st.a)*Math.min(1, dt*3);
+    }
+    for(const fs of floatStars){
+      const h = fs.heart;
+      if(phaseT*1000 > h.fadeIn) fs.ta = 1;
+      // экран бойымен еркін қозғалу (Lissajous + баяу дрейф)
+      const axW = h.nax*W + Math.sin(t*0.05+h.ph3)*W*0.035;
+      const ayW = h.nay*H + Math.sin(t*0.04+h.ph4)*H*0.035;
+      fs.x = axW + Math.sin(t*h.a1+h.ph1)*h.A + fs.lx*h.scale;
+      fs.y = ayW + Math.cos(t*h.a2+h.ph2)*h.B - fs.ly*h.scale;   // жүрек тік тұрады
+      fs.a += (fs.ta-fs.a)*Math.min(1, dt*2.2);
+    }
+    return;
+  }
+
+  // opening / letter / rain / heart — transition model
+  for(const st of allStars){
+    if(st.p < 1){
+      st.p = Math.min(1, st.p + dt/st.dur);
+      const pe = clamp(st.p, 0, 1), e = easeIO(pe);
+      const wob = (pe>0 && pe<1) ? Math.sin(pe*Math.PI)*st.swirl : 0;
+      st.x = lerp(st.fx, st.tx, e) + st.px*wob;
+      st.y = lerp(st.fy, st.ty, e) + st.py*wob;
+    }
+    st.a += (st.ta-st.a)*Math.min(1, dt*2.6);
+  }
+  if(phase === 'heart'){
+    heartGlow.style.transform = `translate(-50%,-50%) scale(${heartScale(t)})`;
+  }
+}
+
+/* ================= draw ================= */
+function draw(t){
+  ctx.clearRect(0,0,W,H);
+  const s = heartScale(t);
+  const usePulse = phase === 'heart' && heart;
+  const boost = phase === 'formed' ? 1.32 : phase === 'heart' ? 1.18 : 1;
+  const bright = phase === 'formed' ? 1.22 : 1;
+  const heartPink = phase === 'heart'; // финал жүрегі — роз
+  const heartDone = heartPink && phaseT > 3.2 && heartLayers; // жиналу аяқталды → іші дайын қабат
+  if(heartDone){
+    ctx.save();
+    ctx.translate(heart.cx, heart.cy);
+    ctx.scale(s, s);
+    for(let L=0; L<heartLayers.length; L++){
+      const lc = heartLayers[L];
+      ctx.globalAlpha = 0.82 + 0.18*Math.sin(t*(0.7+L*0.45) + L*2.1); // жыпылықтау
+      ctx.drawImage(lc, -lc.width/2, -lc.height/2);
+    }
+    ctx.restore();
+    ctx.globalAlpha = 1;
+  }
+  for(let c=0;c<cols.length;c++){
+    const spr = heartPink ? SP[2] : SP[c];
+    for(const st of cols[c]){
+      if(heartDone && st.hfill) continue;
+      const twv = st.tw.base + st.tw.amp*Math.sin(t*st.tw.sp + st.tw.ph);
+      let a = st.a*twv*bright;
+      if(a < 0.02) continue;
+      if(a > 1) a = 1;
+      let x = st.x, y = st.y;
+      if(usePulse && st.p >= 1){
+        x = heart.cx + (x-heart.cx)*s;
+        y = heart.cy + (y-heart.cy)*s;
+      }
+      const sz = st.size*(1 + 0.2*Math.sin(t*st.tw.sp*1.6 + st.tw.ph*2))*2.4*boost;
+      ctx.globalAlpha = a;
+      ctx.drawImage(spr, x-sz, y-sz, sz*2, sz*2);
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+function drawRain(dt, t){
+  const A = clamp(Math.min(phaseT/0.9, (RAIN_D-phaseT)/1.4), 0, 1);
+  if(A <= 0) return;
+  ctx.textBaseline = 'top';
+  for(const w of rainWords){
+    w.y += w.v*dt;
+    const fs = rainFont*w.size;
+    const rowH2 = fs*1.25;
+    if(w.y - rowH2*3 > H + 30){ Object.assign(w, newRainWord(false)); }
+    const x = w.x + Math.sin(t*w.swW + w.swPh)*w.sw;
+    const y = w.y;
+    ctx.font = `${fs}px 'Bad Script','Caveat',cursive`;
+    const flick = 0.7 + 0.3*Math.abs(Math.sin(t*9 + w.swPh)*Math.sin(t*2.7 + w.x*0.013)); // тілтіркену
+    // қызғылт neon жарқылы (галло)
+    ctx.globalCompositeOperation = 'lighter';
+    const gw = fs*w.word.length*0.45;
+    const gs = fs*4.4;
+    ctx.globalAlpha = A*0.5*flick;
+    ctx.drawImage(GLOW_SP, x+gw*0.5-gs/2, y+fs*0.45-gs/2, gs, gs);
+    ctx.globalCompositeOperation = 'source-over';
+    // негізгі сөз — бір рет, анық, жарқырап жанып тұрады
+    ctx.fillStyle = w.col;
+    ctx.globalAlpha = A*flick;
+    ctx.fillText(w.word, x, y);
+  }
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = 'source-over';
+}
+function updateShoot(dt){
+  meteorAcc += dt*100; // ~100 метеор/с
+  while(meteorAcc >= 1){
+    meteorAcc -= 1;
+    if(meteors.length < 150){
+      const sp = rand(420, 950), ang = rand(0.32, 0.62);
+      meteors.push({ x:rand(0, W*1.15), y:rand(-H*0.25, H*0.4),
+        vx:-Math.cos(ang)*sp, vy:Math.sin(ang)*sp,
+        life:0, max:rand(0.45, 0.85), w:rand(0.6, 1.5), a:rand(0.3, 0.8) });
+    }
+  }
+  for(const m of meteors){ m.life += dt; m.x += m.vx*dt; m.y += m.vy*dt; }
+  meteors = meteors.filter(m => m.life < m.max && m.x > -250 && m.y < H + 250);
+  ctx.globalAlpha = 1;
+  for(const m of meteors){
+    const a = Math.sin(m.life/m.max*Math.PI)*m.a;
+    if(a <= 0.02) continue;
+    const tx = m.x - m.vx*0.12, ty = m.y - m.vy*0.12;
+    const gr = ctx.createLinearGradient(m.x, m.y, tx, ty);
+    gr.addColorStop(0, `rgba(255,244,250,${a})`);
+    gr.addColorStop(1, 'rgba(255,244,250,0)');
+    ctx.strokeStyle = gr; ctx.lineWidth = m.w;
+    ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(tx, ty); ctx.stroke();
+  }
+}
+
+/* ================= frame loop ================= */
+function frame(ts){
+  const t = ts/1000;
+  const dt = clamp(t-last||0.016, 0.001, 0.05);
+  last = t;
+  phaseT += dt;
+  update(dt, t);
+  draw(t);
+  if(phase === 'rain'){
+    drawRain(dt, t);
+    if(phaseT >= RAIN_D) startHeart();
+  }
+  updateShoot(dt);
+  requestAnimationFrame(frame);
+}
+
+/* ================= resize ================= */
+function resize(){
+  const ow = W, oh = H;
+  W = window.innerWidth; H = window.innerHeight;
+  DPR = Math.min(2, window.devicePixelRatio||1);
+  canvas.width = Math.round(W*DPR); canvas.height = Math.round(H*DPR);
+  canvas.style.width = W+'px'; canvas.style.height = H+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  if(ow>0 && oh>0){
+    const rx = W/ow, ry = H/oh;
+    for(const st of allStars){
+      st.hx*=rx; st.hy*=ry; st.x*=rx; st.y*=ry;
+      st.fx*=rx; st.fy*=ry; st.tx*=rx; st.ty*=ry;
+      if(st.hx2 != null){ st.hx2*=rx; st.hy2*=ry; }
+    }
+  }
+  if(phase === 'idle') envelopeTargets();
+  else if(phase === 'formed'){
+    envelopeTargets();
+    for(const st of stars){ st.x = st.tx; st.y = st.ty; }
+    repositionFloatHearts();
+    positionGlow();
+  }
+  else if(phase === 'heart'){
+    heartTargets();
+    buildHeartLayers();
+    for(const st of allStars){ st.tx = st.hx2; st.ty = st.hy2; }
+    const d = Math.min(W,H)*0.95;
+    heartGlow.style.width = d+'px'; heartGlow.style.height = d+'px';
+    heartGlow.style.left = heart.cx+'px'; heartGlow.style.top = heart.cy+'px';
+  }
+  if(phase === 'rain') initRain();
+}
+
+/* ================= events ================= */
+holdBtn.addEventListener('pointerdown', e => {
+  if(phase !== 'idle') return;
+  e.preventDefault();
+  try{ holdBtn.setPointerCapture(e.pointerId); }catch(_){}
+  holding = true; holdStart = performance.now();
+});
+['pointerup','pointercancel','lostpointercapture'].forEach(ev =>
+  holdBtn.addEventListener(ev, () => { holding = false; }));
+holdBtn.addEventListener('contextmenu', e => e.preventDefault());
+window.addEventListener('blur', () => { holding = false; });
+openBtn.addEventListener('click', () => { if(phase === 'formed') startOpening(false); });
+panelBtn.addEventListener('click', () => {
+  if(phase === 'letter') startRain();
+});
+// мәтінді соңына оқып болғанда (scroll соңына жеткенде) — жаңбыр
+panel.addEventListener('scroll', () => {
+  if(phase !== 'letter') return;
+  if(panel.scrollHeight > panel.clientHeight + 8 &&
+     panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 24){
+    setTimeout(() => { if(phase === 'letter') startRain(); }, 900);
+  }
+});
+// жаңбыр кезінде кез келген жерді басу → жүрекке өту
+canvas.addEventListener('pointerdown', () => {}); // экранды басқанда финалға өтпейді
+replayBtn.addEventListener('click', () => location.reload());
+window.addEventListener('resize', resize);
+
+/* ================= test/debug API ================= */
+window.__love = {
+  get phase(){ return phase; },
+  get holdP(){ return holdP; },
+  hold(ms){
+    if(phase !== 'idle') return 'not-idle';
+    holding = true; holdStart = performance.now();
+    setTimeout(() => { holding = false; }, ms == null ? 3400 : ms);
+    return 'holding';
+  },
+  open(){ if(phase === 'formed') startOpening(false); return phase; },
+  goto(p){
+    if(p === 'formed'){
+      if(phase === 'idle'){ holdP = 1; locked = true; lockForm(); }
+    } else if(p === 'letter'){
+      if(phase === 'idle'){ holdP = 1; locked = true; lockForm(); }
+      if(phase !== 'letter' && phase !== 'opening') startOpening(true);
+    } else if(p === 'rain'){
+      if(phase !== 'rain'){ panel.classList.remove('vis'); startRain(); }
+    } else if(p === 'heart'){
+      if(phase !== 'heart') startHeart();
+    }
+    return phase;
+  }
+};
+
+/* ================= init ================= */
+// жаңбыр шрифтіне алдын жүктеу (кириллицаны қолдайтын қол жазуы)
+try { document.fonts.load('16px "Bad Script"'); document.fonts.load('16px "Caveat"'); } catch(_){}
+resize();
+makeStars();
+envelopeTargets();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

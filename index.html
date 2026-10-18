@@ -33,7 +33,7 @@
   #envGlow,#heartGlow{position:fixed;z-index:3;pointer-events:none;border-radius:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity 1.6s ease;}
   #envGlow{background:radial-gradient(circle,rgba(150,140,255,.17),transparent 65%);}
   #envGlow.vis{opacity:1;}
-  #heartGlow{background:radial-gradient(circle,rgba(255,80,140,.22) 0%,rgba(255,80,140,.08) 40%,transparent 70%);transition:opacity 2s ease;}
+  #heartGlow{background:radial-gradient(circle,rgba(255,80,140,.13) 0%,rgba(255,80,140,.05) 40%,transparent 70%);transition:opacity 2s ease;}
   #heartGlow.vis{opacity:1;}
 
   /* ---- круглая кнопка (hold) ---- */
@@ -426,28 +426,39 @@ function heartTargets(){
     const r = Math.sqrt(Math.random())*0.9;
     return [mcx + (p[0]-mcx)*r, mcy + (p[1]-mcy)*r];
   };
+  // жүрек жұлдыздардың тек бір бөлігінен тұрады — арасы көрінеді,
+  // қалғаны — фондық ғалактикада қалады
   const n = allStars.length;
-  const nFill = Math.round(n*0.50), nDim = Math.round(n*0.35); // ашық толу + алыс сұлу жұлдыздар, тығыздалмаған
+  const nHeart   = Math.round(n*0.42);
+  const nOutline = Math.round(nHeart*0.20);
+  const nFill    = Math.round(nHeart*0.55);
   for(let i=0;i<n;i++){
     const st = allStars[i];
-    if(i < nFill){
-      // жүрек іші — ашық, тығыздалмаған
-      const fp = randFill();
-      st.hx2 = cx + (fp[0]-mcx)*scale + rand(-1,1);
-      st.hy2 = cy - (fp[1]-mcy)*scale + rand(-1,1);
-      st.inner = false; st.hfill = true; st.ha = rand(0.5, 0.85);
-    } else if(i < nFill + nDim){
-      // алыс, сұлу жұлдыздар — тереңдік
-      const fp = randFill();
-      st.hx2 = cx + (fp[0]-mcx)*scale + rand(-1,1);
-      st.hy2 = cy - (fp[1]-mcy)*scale + rand(-1,1);
-      st.inner = false; st.hfill = true; st.ha = rand(0.15, 0.4);
+    if(i < nHeart){
+      if(i < nOutline){
+        // сыртқы контур — анық шекара
+        const p = raw[i % N];
+        st.hx2 = cx + (p[0]-mcx)*scale + rand(-2,2);
+        st.hy2 = cy - (p[1]-mcy)*scale + rand(-2,2);
+        st.inner = false; st.hfill = false; st.ha = 1;
+      } else if(i < nOutline + nFill){
+        // жүрек іші — ашық жұлдыздар
+        const fp = randFill();
+        st.hx2 = cx + (fp[0]-mcx)*scale + rand(-1,1);
+        st.hy2 = cy - (fp[1]-mcy)*scale + rand(-1,1);
+        st.inner = false; st.hfill = true; st.ha = rand(0.5, 0.8);
+      } else {
+        // алыс, сұлу жұлдыздар — тереңдік
+        const fp = randFill();
+        st.hx2 = cx + (fp[0]-mcx)*scale + rand(-1,1);
+        st.hy2 = cy - (fp[1]-mcy)*scale + rand(-1,1);
+        st.inner = false; st.hfill = true; st.ha = rand(0.15, 0.35);
+      }
     } else {
-      // сыртқы контур — анық шекара
-      const p = raw[i % N];
-      st.hx2 = cx + (p[0]-mcx)*scale + rand(-2,2);
-      st.hy2 = cy - (p[1]-mcy)*scale + rand(-2,2);
-      st.inner = false; st.hfill = false; st.ha = 1;
+      // фондық аспан жұлдыздары
+      st.hx2 = rand(0, W);
+      st.hy2 = rand(0, H);
+      st.inner = false; st.hfill = false; st.ha = rand(0.2, 0.55);
     }
   }
 }
@@ -461,7 +472,7 @@ function buildHeartLayers(){
   for(let L=0; L<3; L++){
     const c = document.createElement('canvas'); c.width = cw; c.height = ch;
     const g = c.getContext('2d');
-    g.globalCompositeOperation = 'lighter';
+    g.globalCompositeOperation = 'source-over';
     let i = 0;
     for(const st of allStars){
       if(!st.hfill) continue;

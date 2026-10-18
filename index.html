@@ -198,8 +198,8 @@ function makeSprite(core, halo){
   const g = c.getContext('2d'), r = s/2;
   const gr = g.createRadialGradient(r,r,0,r,r,r);
   gr.addColorStop(0, core);
-  gr.addColorStop(0.16, core);
-  gr.addColorStop(0.34, halo);
+  gr.addColorStop(0.24, core);
+  gr.addColorStop(0.38, halo);
   gr.addColorStop(1, 'rgba(0,0,0,0)');
   g.fillStyle = gr; g.fillRect(0,0,s,s);
   return c;
@@ -276,7 +276,7 @@ function makeStars(){
   const area = W*H;
   const HF = area > 1200000 ? 200 : area > 500000 ? 130 : 60;  // жүрекшелер саны
   const HS = 14, hpts = heartLocal(14);
-  const total = Math.max(HF*HS + 1000, clamp(Math.round(area/300), 1200, 7000));
+  const total = Math.max(HF*HS + 1000, clamp(Math.round(area/300), 1200, 8500));
   for(let i=0;i<total-HF*HS;i++) stars.push(newStar());
   // мөр жүрегінің жұлдыздары (соңғы sealN-і) — роз
   {
@@ -418,7 +418,7 @@ function heartTargets(){
     return [mcx + (p[0]-mcx)*r, mcy + (p[1]-mcy)*r];
   };
   const n = allStars.length;
-  const nFill = Math.round(n*0.80); // 80% — жүрек іші толық тығыз, екінші жүрек жоқ
+  const nFill = Math.round(n*0.88); // 88% — жүрек іші қатты тығыз, сыртта анық шекара
   for(let i=0;i<n;i++){
     const st = allStars[i];
     if(i < nFill){
@@ -426,7 +426,7 @@ function heartTargets(){
       const fp = randFill();
       st.hx2 = cx + (fp[0]-mcx)*scale + rand(-1,1);
       st.hy2 = cy - (fp[1]-mcy)*scale + rand(-1,1);
-      st.inner = false; st.hfill = true; st.ha = rand(0.65, 1);
+      st.inner = false; st.hfill = true; st.ha = rand(0.75, 1);
     } else {
       // сыртқы контур — бір ғана анық шекара
       const p = raw[i % N];
@@ -453,7 +453,7 @@ function buildHeartLayers(){
       if((i++) % 3 !== L) continue;
       const x = st.hx2 - heart.cx + cw/2;
       const y = st.hy2 - heart.cy + ch/2;
-      const sz = st.size*2.4*1.18;
+      const sz = st.size*2.7*1.5;
       g.globalAlpha = st.ha;
       g.drawImage(spr, x-sz, y-sz, sz*2, sz*2);
     }
@@ -748,7 +748,7 @@ function frame(ts){
 function resize(){
   const ow = W, oh = H;
   W = window.innerWidth; H = window.innerHeight;
-  DPR = Math.min(2, window.devicePixelRatio||1);
+  DPR = Math.min(3, window.devicePixelRatio||1); // телефонда 3x — анық жұлдыздар
   canvas.width = Math.round(W*DPR); canvas.height = Math.round(H*DPR);
   canvas.style.width = W+'px'; canvas.style.height = H+'px';
   ctx.setTransform(DPR,0,0,DPR,0,0);

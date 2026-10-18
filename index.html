@@ -208,6 +208,21 @@ const SP = [ makeSprite('#ffffff','#bcd2ff'),
              makeSprite('#fff6e6','#ffd9a8'),
              makeSprite('#fff0f6','#ffb0d4'),
              makeSprite('#fff7e2','#e6c07c') ]; // 3 — беж
+// жүрекшелерге арнап — нақтырақ, кіші жарық шеңбері (жақын келгенде бұлыңғырламайды)
+function makeHeartSprite(){
+  const s = 64, c = document.createElement('canvas');
+  c.width = c.height = s;
+  const g = c.getContext('2d'), r = s/2;
+  const gr = g.createRadialGradient(r,r,0,r,r,r);
+  gr.addColorStop(0, '#fff3f8');
+  gr.addColorStop(0.30, '#ffc4de');
+  gr.addColorStop(0.48, '#ffa8cd');
+  gr.addColorStop(0.68, 'rgba(255,110,170,0.22)');
+  gr.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = gr; g.fillRect(0,0,s,s);
+  return c;
+}
+const SPH = makeHeartSprite();
 function makeGlowSprite(){
   const s = 128, c = document.createElement('canvas');
   c.width = c.height = s;
@@ -287,9 +302,9 @@ function makeStars(){
   for(let h=0;h<HF;h++){
     const heart = { nax:0.5, nay:0.5,
                     a1:rand(0.25,0.6), a2:rand(0.22,0.55),
-                    A:rand(24,70), B:rand(18,52),
+                    A:rand(8,20), B:rand(6,16),
                     ph1:rand(0,TAU), ph2:rand(0,TAU), ph3:rand(0,TAU), ph4:rand(0,TAU),
-                    scale:rand(2.6,3.8), fadeIn:300+h*7 };
+                    scale:rand(2.2,3.2), fadeIn:300+h*7 };
     for(let k=0;k<HS;k++){
       const p = hpts[k % hpts.length];
       floatStars.push({
@@ -306,14 +321,22 @@ function makeStars(){
   for(const st of allStars) cols[st.col].push(st);
 }
 
-/* жүрекшелерді хаттың қасындағы ауаға (кольцо) орналастыру */
+/* жүрекшелерді хаттың қасындағы ауаға (кольцо) орналастыру —
+   3 сақина бойынша тең бөліну: шоғырланбайды, экраннан шықпайды */
 function repositionFloatHearts(){
   const R = Math.max(envG.W, envG.H)/2;
-  for(const fh of floatHearts){
-    const a = rand(0, TAU);
-    const rr = R * rand(1.12, 2.1);
-    fh.nax = clamp((envG.cx + Math.cos(a)*rr*1.18)/W, 0.04, 0.96);
-    fh.nay = clamp((envG.cy + Math.sin(a)*rr*0.82)/H, 0.05, 0.95);
+  const N = floatHearts.length;
+  const baseX = R*0.62, baseY = R*0.45;          // конверт шеті
+  const spanX = Math.max(40, W*0.46 - baseX);    // қалған бос орын
+  const spanY = Math.max(34, H*0.40 - baseY);
+  for(let i=0;i<N;i++){
+    const fh = floatHearts[i];
+    const ring = i % 3;
+    const f = 0.38 + ring*0.30 + rand(-0.04, 0.04);
+    const rx = baseX + spanX*f, ry = baseY + spanY*f;
+    const a = (i/N)*TAU + rand(-0.45, 0.45)*(TAU/N); // тең бос орын + сәл шатасу
+    fh.nax = clamp((envG.cx + Math.cos(a)*rx)/W, 0.05, 0.95);
+    fh.nay = clamp((envG.cy + Math.sin(a)*ry)/H, 0.06, 0.94);
   }
 }
 
@@ -681,7 +704,7 @@ function draw(t){
     ctx.globalAlpha = 1;
   }
   for(let c=0;c<cols.length;c++){
-    const spr = heartPink ? SP[2] : SP[c];
+    const sprC = SP[c];
     for(const st of cols[c]){
       if(heartDone && st.hfill) continue;
       const twv = st.tw.base + st.tw.amp*Math.sin(t*st.tw.sp + st.tw.ph);
@@ -694,6 +717,7 @@ function draw(t){
         y = heart.cy + (y-heart.cy)*s;
       }
       const sz = st.size*(1 + 0.2*Math.sin(t*st.tw.sp*1.6 + st.tw.ph*2))*2.4*boost*MS;
+      const spr = heartPink ? SP[2] : (st.heart ? SPH : sprC);
       ctx.globalAlpha = a;
       ctx.drawImage(spr, x-sz, y-sz, sz*2, sz*2);
     }

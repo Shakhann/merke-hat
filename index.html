@@ -418,17 +418,23 @@ function heartTargets(){
     return [mcx + (p[0]-mcx)*r, mcy + (p[1]-mcy)*r];
   };
   const n = allStars.length;
-  const nFill = Math.round(n*0.88); // 88% — жүрек іші қатты тығыз, сыртта анық шекара
+  const nFill = Math.round(n*0.50), nDim = Math.round(n*0.35); // ашық толу + алыс сұлу жұлдыздар, тығыздалмаған
   for(let i=0;i<n;i++){
     const st = allStars[i];
     if(i < nFill){
-      // жүрек іші — біркелкі, тығыз толу (тығыз сызықсыз)
+      // жүрек іші — ашық, тығыздалмаған
       const fp = randFill();
       st.hx2 = cx + (fp[0]-mcx)*scale + rand(-1,1);
       st.hy2 = cy - (fp[1]-mcy)*scale + rand(-1,1);
-      st.inner = false; st.hfill = true; st.ha = rand(0.75, 1);
+      st.inner = false; st.hfill = true; st.ha = rand(0.5, 0.85);
+    } else if(i < nFill + nDim){
+      // алыс, сұлу жұлдыздар — тереңдік
+      const fp = randFill();
+      st.hx2 = cx + (fp[0]-mcx)*scale + rand(-1,1);
+      st.hy2 = cy - (fp[1]-mcy)*scale + rand(-1,1);
+      st.inner = false; st.hfill = true; st.ha = rand(0.15, 0.4);
     } else {
-      // сыртқы контур — бір ғана анық шекара
+      // сыртқы контур — анық шекара
       const p = raw[i % N];
       st.hx2 = cx + (p[0]-mcx)*scale + rand(-2,2);
       st.hy2 = cy - (p[1]-mcy)*scale + rand(-2,2);
@@ -453,7 +459,7 @@ function buildHeartLayers(){
       if((i++) % 3 !== L) continue;
       const x = st.hx2 - heart.cx + cw/2;
       const y = st.hy2 - heart.cy + ch/2;
-      const sz = st.size*2.7*1.5;
+      const sz = st.size*2.4*1.18*(W < 640 ? 0.72 : 1);
       g.globalAlpha = st.ha;
       g.drawImage(spr, x-sz, y-sz, sz*2, sz*2);
     }
@@ -639,6 +645,7 @@ function draw(t){
   const s = heartScale(t);
   const usePulse = phase === 'heart' && heart;
   const boost = phase === 'formed' ? 1.32 : phase === 'heart' ? 1.18 : 1;
+  const MS = W < 640 ? 0.72 : 1; // телефонда — ұсақ, нақты жұлдыздар
   const bright = phase === 'formed' ? 1.22 : 1;
   const heartPink = phase === 'heart'; // финал жүрегі — роз
   const heartDone = heartPink && phaseT > 3.2 && heartLayers; // жиналу аяқталды → іші дайын қабат
@@ -667,7 +674,7 @@ function draw(t){
         x = heart.cx + (x-heart.cx)*s;
         y = heart.cy + (y-heart.cy)*s;
       }
-      const sz = st.size*(1 + 0.2*Math.sin(t*st.tw.sp*1.6 + st.tw.ph*2))*2.4*boost;
+      const sz = st.size*(1 + 0.2*Math.sin(t*st.tw.sp*1.6 + st.tw.ph*2))*2.4*boost*MS;
       ctx.globalAlpha = a;
       ctx.drawImage(spr, x-sz, y-sz, sz*2, sz*2);
     }

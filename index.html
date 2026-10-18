@@ -197,9 +197,9 @@ function makeSprite(core, halo){
   const g = c.getContext('2d'), r = s/2;
   const gr = g.createRadialGradient(r,r,0,r,r,r);
   gr.addColorStop(0, core);
-  gr.addColorStop(0.24, core);
-  gr.addColorStop(0.38, halo);
-  gr.addColorStop(1, 'rgba(0,0,0,0)');
+  gr.addColorStop(0.30, core);
+  gr.addColorStop(0.50, halo);
+  gr.addColorStop(0.82, 'rgba(0,0,0,0)');
   g.fillStyle = gr; g.fillRect(0,0,s,s);
   return c;
 }
@@ -290,7 +290,7 @@ function makeStars(){
   const area = W*H;
   const HF = area > 1200000 ? 500 : area > 500000 ? 130 : 60;  // жүрекшелер саны
   const HS = 14, hpts = heartLocal(14);
-  const total = Math.max(HF*HS + 1000, clamp(Math.round(area/240), 1200, 12500));
+  const total = Math.max(HF*HS + 1000, clamp(Math.round(area/240), 1200, 10500));
   for(let i=0;i<total-HF*HS;i++) stars.push(newStar());
   // мөр жүрегінің жұлдыздары (соңғы sealN-і) — роз
   {
@@ -377,23 +377,23 @@ function envelopeTargets(){
     putSeg(stars[idx++], segs[(Math.random()*segs.length)|0], Math.random());
   }
 
-  // ішкі толу — қатарлы шашырау: әр жұлдыз жеке көрінеді, бұлыңғырламайды
+  // ішкі толу — қатарлы шашырау: арасы ашық, әр жұлдыз жеке көрінеді
   {
-    const gc = Math.max(10, Math.round(Wenv/13));
-    const gr = Math.max(8, Math.round(Henv/13));
+    const gc = Math.max(10, Math.round(Wenv/16));
+    const gr = Math.max(8, Math.round(Henv/16));
     const gx = Wenv/gc, gy = Henv/gr;
     let fi = nOutline;
     const putCell = (r, c, ta) => {
       if(fi >= n) return;
       const st = stars[fi++];
       st.flap = false; st.seal = false; st.fill = true;
-      st.tx = g.cx - Wenv/2 + (c+0.5)*gx + rand(-gx*0.36, gx*0.36);
-      st.ty = g.cy - Henv/2 + (r+0.5)*gy + rand(-gy*0.36, gy*0.36);
+      st.tx = g.cx - Wenv/2 + (c+0.5)*gx + rand(-gx*0.4, gx*0.4);
+      st.ty = g.cy - Henv/2 + (r+0.5)*gy + rand(-gy*0.4, gy*0.4);
       st.ta = ta;
       st.tw.amp = Math.min(st.tw.amp, 0.2);
     };
-    for(let r=0;r<gr;r++) for(let c=0;c<gc;c++) putCell(r, c, rand(0.3, 0.55));
-    while(fi < n) putCell((Math.random()*gr)|0, (Math.random()*gc)|0, rand(0.22, 0.42));
+    for(let r=0;r<gr;r++) for(let c=0;c<gc;c++) putCell(r, c, rand(0.24, 0.44));
+    while(fi < n) putCell((Math.random()*gr)|0, (Math.random()*gc)|0, rand(0.16, 0.32));
   }
 
   // қапак ұшындағы кішкентай жұлдыз жүрегі (мөрі)
@@ -451,7 +451,7 @@ function heartTargets(){
   // жүрек жұлдыздардың тек бір бөлігінен тұрады — арасы көрінеді,
   // қалғаны — фондық ғалактикада қалады
   const n = allStars.length;
-  const nHeart   = Math.round(n*0.42);
+  const nHeart   = Math.round(n*0.38);
   const nOutline = Math.round(nHeart*0.20);
   const nFill    = Math.round(nHeart*0.55);
   for(let i=0;i<n;i++){

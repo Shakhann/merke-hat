@@ -726,8 +726,8 @@ function draw(t){
 function drawRain(dt, t){
   const A = clamp(Math.min(phaseT/0.9, (RAIN_D-phaseT)/1.4), 0, 1);
   if(A <= 0) return;
-  rainAcc += dt*30; // 30 сөз/сек
-  const MAXW = W < 640 ? 150 : 240;
+  rainAcc += dt*15; // 15 сөз/сек — жеңіл ағын
+  const MAXW = W < 640 ? 80 : 130;
   while(rainAcc >= 1){ rainAcc -= 1; if(rainWords.length < MAXW) rainWords.push(newRainWord(false)); }
   ctx.textBaseline = 'top';
   for(const w of rainWords){

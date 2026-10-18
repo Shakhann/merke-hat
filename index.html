@@ -231,7 +231,7 @@ const HOLD_MS = 3000, RAIN_D = 10;
 let stars = [], floatStars = [], floatHearts = [], allStars = [], cols = [];
 let envG = {W:0,H:0,cx:0,cy:0};
 let heart = null;
-let rainWords = [], rainFont = 16, rowH = 20;
+let rainWords = [], rainFont = 16, rowH = 20, rainAcc = 0;
 const RAIN_WORDS = ['Жаным','Күнім','Ботам','Айым','Сүйіктім','Сұлуым','Алтыным','Балапаным','Жүрегім','Ботақаным','Қымбаттым'];
 // сөздер әр түрлі қызғылт тонда (референс фотодағыдай)
 const RAIN_MAIN = ['#fff5fa','#ffd9ea','#ffb9d6','#ff92c2','#ff7ab5'];
@@ -274,9 +274,9 @@ function heartLocal(n){
 function makeStars(){
   stars = []; floatStars = []; floatHearts = [];
   const area = W*H;
-  const HF = area > 1200000 ? 200 : area > 500000 ? 130 : 60;  // жүрекшелер саны
+  const HF = area > 1200000 ? 500 : area > 500000 ? 130 : 60;  // жүрекшелер саны
   const HS = 14, hpts = heartLocal(14);
-  const total = Math.max(HF*HS + 1000, clamp(Math.round(area/300), 1200, 8500));
+  const total = Math.max(HF*HS + 1000, clamp(Math.round(area/240), 1200, 12500));
   for(let i=0;i<total-HF*HS;i++) stars.push(newStar());
   // мөр жүрегінің жұлдыздары (соңғы sealN-і) — роз
   {
@@ -355,14 +355,23 @@ function envelopeTargets(){
     putSeg(stars[idx++], segs[(Math.random()*segs.length)|0], Math.random());
   }
 
-  // ішкі толу — тығыз жұлдыздар өрісі (сәл бұғырақ)
-  for(let i=nOutline;i<n;i++){
-    const st = stars[i];
-    st.flap = false; st.seal = false; st.fill = true;
-    st.tx = g.cx + rand(-Wenv/2, Wenv/2);
-    st.ty = g.cy + rand(-Henv/2, Henv/2);
-    st.ta = rand(0.42, 0.72);
-    st.tw.amp = Math.min(st.tw.amp, 0.22);
+  // ішкі толу — қатарлы шашырау: әр жұлдыз жеке көрінеді, бұлыңғырламайды
+  {
+    const gc = Math.max(10, Math.round(Wenv/13));
+    const gr = Math.max(8, Math.round(Henv/13));
+    const gx = Wenv/gc, gy = Henv/gr;
+    let fi = nOutline;
+    const putCell = (r, c, ta) => {
+      if(fi >= n) return;
+      const st = stars[fi++];
+      st.flap = false; st.seal = false; st.fill = true;
+      st.tx = g.cx - Wenv/2 + (c+0.5)*gx + rand(-gx*0.36, gx*0.36);
+      st.ty = g.cy - Henv/2 + (r+0.5)*gy + rand(-gy*0.36, gy*0.36);
+      st.ta = ta;
+      st.tw.amp = Math.min(st.tw.amp, 0.2);
+    };
+    for(let r=0;r<gr;r++) for(let c=0;c<gc;c++) putCell(r, c, rand(0.3, 0.55));
+    while(fi < n) putCell((Math.random()*gr)|0, (Math.random()*gc)|0, rand(0.22, 0.42));
   }
 
   // қапак ұшындағы кішкентай жұлдыз жүрегі (мөрі)
@@ -536,9 +545,8 @@ function startOpening(fast){
 function initRain(){
   rainFont = clamp(Math.round(H*0.02), 15, 24);
   rowH = rainFont*1.32;
-  const n = clamp(Math.round(W*H/34000), 40, 90); // экранға сәйкес сөз саны
   rainWords = [];
-  for(let i=0;i<n;i++) rainWords.push(newRainWord(true));
+  rainAcc = 0; // 30 сөз/сек — төбеден тұрақты ағын
 }
 function newRainWord(prefill){
   return {
@@ -684,6 +692,9 @@ function draw(t){
 function drawRain(dt, t){
   const A = clamp(Math.min(phaseT/0.9, (RAIN_D-phaseT)/1.4), 0, 1);
   if(A <= 0) return;
+  rainAcc += dt*30; // 30 сөз/сек
+  const MAXW = W < 640 ? 150 : 240;
+  while(rainAcc >= 1){ rainAcc -= 1; if(rainWords.length < MAXW) rainWords.push(newRainWord(false)); }
   ctx.textBaseline = 'top';
   for(const w of rainWords){
     w.y += w.v*dt;

@@ -184,44 +184,30 @@ ringEl.style.strokeDashoffset = RING_C;
 
 /* ================= letter text ================= */
 const CHUNKS = [
-'Жаным, өміріме нұр болып келгеніңе бүгін тура 2 ай. Осы аз ғана уақыттың ішінде сен менің ең жақын, ең қымбат адамыма айналдың. Сенімен өткен әрбір күн мен үшін ерекше. Сені қатты жақсы көремін!'
+'Дәл 2 ай бұрын өмірімде сендей керемет жан пайда болады деп ойламаппын. Сен — менің күтпеген, бірақ ең тәтті бақытымсың. Қасымда болған әрбір сәтің үшін, өміріме сыйлаған жарығың үшін рақмет. Қасымда сен болғандықтан, уақыттың қалай жылдам өтіп кеткенін де байқамадым. Сені қатты жақсы көремін! ❤️'
 ];
 const letterText = $('letterText');
 letterText.innerHTML = CHUNKS.map(c => `<p class="chunk">${c}</p>`).join('');
 const chunkEls = Array.from(letterText.children);
 
-/* ================= star sprites ================= */
-function makeSprite(core, halo){
-  const s = 64, c = document.createElement('canvas');
+/* ================= шар sprite-тері: домалақ, кішкентай, жарық шеңберсіз ================= */
+function makeBall(body, edge){
+  const s = 32, c = document.createElement('canvas');
   c.width = c.height = s;
   const g = c.getContext('2d'), r = s/2;
-  const gr = g.createRadialGradient(r,r,0,r,r,r);
-  gr.addColorStop(0, core);
-  gr.addColorStop(0.30, core);
-  gr.addColorStop(0.50, halo);
-  gr.addColorStop(0.82, 'rgba(0,0,0,0)');
-  g.fillStyle = gr; g.fillRect(0,0,s,s);
+  const gr = g.createRadialGradient(r*0.55, r*0.48, r*0.12, r, r, r);
+  gr.addColorStop(0, 'rgba(255,255,255,0.9)');
+  gr.addColorStop(0.35, body);
+  gr.addColorStop(1, edge);
+  g.fillStyle = gr;
+  g.beginPath(); g.arc(r, r, r*0.94, 0, TAU); g.fill();
   return c;
 }
-const SP = [ makeSprite('#ffffff','#bcd2ff'),
-             makeSprite('#fff6e6','#ffd9a8'),
-             makeSprite('#fff0f6','#ffb0d4'),
-             makeSprite('#fff7e2','#e6c07c') ]; // 3 — беж
-// жүрекшелерге арнап — нақтырақ, кіші жарық шеңбері (жақын келгенде бұлыңғырламайды)
-function makeHeartSprite(){
-  const s = 64, c = document.createElement('canvas');
-  c.width = c.height = s;
-  const g = c.getContext('2d'), r = s/2;
-  const gr = g.createRadialGradient(r,r,0,r,r,r);
-  gr.addColorStop(0, '#fff3f8');
-  gr.addColorStop(0.30, '#ffc4de');
-  gr.addColorStop(0.48, '#ffa8cd');
-  gr.addColorStop(0.68, 'rgba(255,110,170,0.22)');
-  gr.addColorStop(1, 'rgba(0,0,0,0)');
-  g.fillStyle = gr; g.fillRect(0,0,s,s);
-  return c;
-}
-const SPH = makeHeartSprite();
+const SP = [ makeBall('#cfe0ff','#8fb0e8'),   // ақ-көк
+             makeBall('#ffe9c9','#e8b070'),   // жылы
+             makeBall('#ffc9e0','#e88ab0'),   // роз
+             makeBall('#f0e0bc','#c8a878') ]; // беж
+const SPH = makeBall('#ffd0e6','#e890b8');    // жүрекше шарлары
 function makeGlowSprite(){
   const s = 128, c = document.createElement('canvas');
   c.width = c.height = s;
@@ -500,7 +486,7 @@ function buildHeartLayers(){
       if((i++) % 3 !== L) continue;
       const x = st.hx2 - heart.cx + cw/2;
       const y = st.hy2 - heart.cy + ch/2;
-      const sz = st.size*2.4*1.18*(W < 640 ? 0.72 : 1);
+      const sz = st.size*1.9*1.18*(W < 640 ? 0.72 : 1);
       g.globalAlpha = st.ha;
       g.drawImage(spr, x-sz, y-sz, sz*2, sz*2);
     }
@@ -719,7 +705,7 @@ function draw(t){
         x = heart.cx + (x-heart.cx)*s;
         y = heart.cy + (y-heart.cy)*s;
       }
-      const sz = st.size*(1 + 0.2*Math.sin(t*st.tw.sp*1.6 + st.tw.ph*2))*2.4*boost*MS;
+      const sz = st.size*(1 + 0.2*Math.sin(t*st.tw.sp*1.6 + st.tw.ph*2))*1.9*boost*MS;
       const spr = heartPink ? SP[2] : (st.heart ? SPH : sprC);
       ctx.globalAlpha = a;
       ctx.drawImage(spr, x-sz, y-sz, sz*2, sz*2);
